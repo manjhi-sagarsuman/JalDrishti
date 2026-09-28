@@ -1,0 +1,137 @@
+#root {
+  min-height: 100vh;
+}
+
+.login-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(470px, .82fr);
+  min-height: 100vh;
+  background: #f7fbff;
+  color: #102f5e;
+}
+
+.watershed-panel {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #092e43;
+  color: #fff;
+}
+
+.map-art,
+.map-art svg,
+.map-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map-art svg { object-fit: cover; }
+.map-shade { z-index: 1; background: linear-gradient(180deg, rgba(3, 34, 52, .68), transparent 28%, transparent 68%, rgba(2, 30, 49, .78)), linear-gradient(90deg, rgba(3, 34, 52, .2), transparent 70%); }
+
+.map-brand,
+.map-tagline,
+.map-label,
+.map-legend,
+.map-footer { position: absolute; z-index: 2; }
+
+.map-brand { top: 30px; left: 34px; display: flex; align-items: center; gap: 12px; }
+.map-brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid #d6edf4a8; border-radius: 13px; background: #ffffff14; color: #8cdbba; }
+.map-brand p { margin: 0; font-size: 18px; font-weight: 750; letter-spacing: .01em; }
+.map-brand span { display: block; margin-top: 3px; color: #d3e9ef; font-size: 12px; }
+.map-tagline { top: 31px; right: 36px; margin: 0; color: #e4f2ff; font-size: 17px; font-weight: 600; font-style: italic; line-height: 1.45; text-align: right; }
+.map-label { display: flex; align-items: center; gap: 9px; padding: 8px 11px; border: 1px solid #ffffff38; border-radius: 7px; background: #052c40b8; backdrop-filter: blur(8px); font-size: 13px; font-weight: 650; }
+.map-label i { width: 7px; height: 7px; border-radius: 50%; background: #f5fcff; box-shadow: 0 0 8px #fff; }
+.label-boundary { top: 19%; left: 20%; }
+.label-drainage { top: 43%; left: 49%; }
+.label-water { right: 18%; bottom: 31%; }
+.label-agri { bottom: 49%; left: 4%; }
+.map-legend { bottom: 98px; left: 30px; width: 230px; padding: 14px; border: 1px solid #80bbd05c; border-radius: 10px; background: #042b40d9; box-shadow: 0 12px 32px #001c2a3d; backdrop-filter: blur(10px); font-size: 12px; }
+.map-legend > div:not(.scale) { display: flex; align-items: center; gap: 10px; margin: 3px 0 11px; }
+.map-legend b { display: block; width: 20px; height: 13px; border-radius: 3px; }
+.legend-boundary { border: 2px solid #d8f7ff; background: transparent; }
+.legend-river { height: 3px !important; background: #1bb4e2; }
+.legend-water { background: #08a1dc; }
+.legend-land { background: #42834d; }
+.scale { display: flex; align-items: center; gap: 7px; margin-top: 15px; color: #dcecf1; }
+.scale i { position: relative; flex: 1; height: 1px; background: #dcecf1; }
+.scale i::before { position: absolute; top: -3px; left: 0; height: 7px; border-left: 1px solid #dcecf1; content: ""; }
+.map-footer { bottom: 29px; left: 34px; display: flex; align-items: center; gap: 11px; color: #edf7fa; font-size: 14px; }
+.leaf-mark { color: #68cd69; font-size: 25px; }
+.footer-divider { color: #a7c4ce; }
+
+.login-panel { position: relative; display: flex; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 42px clamp(38px, 6vw, 88px) 68px; background: radial-gradient(ellipse at 52% 29%, #fff 0, #f7fbff 61%, #eef6ff 100%); }
+.login-content { z-index: 1; width: min(100%, 490px); margin: auto 0; }
+.login-logo-lockup { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.login-logo { display: block; width: 70px; height: 70px; object-fit: contain; }
+.login-logo-copy { display: flex; flex-direction: column; }
+.login-logo-copy strong { color: #0b2d5b; font-size: 37px; font-weight: 780; letter-spacing: -.055em; line-height: 1; }
+.login-logo-copy strong span { color: #119fdf; }
+.login-logo-copy small { margin-top: 5px; color: #315c87; font-size: 13px; }
+.login-rule { width: 1px; height: 26px; margin: 17px auto 19px; background: #adc8eb; }
+.login-heading { margin-bottom: 29px; text-align: center; }
+.login-heading h1 { margin: 0; color: #102f68; font-size: clamp(27px, 2.5vw, 34px); font-weight: 760; letter-spacing: -.035em; line-height: 1.2; }
+.login-heading p { max-width: 420px; margin: 10px auto 0; color: #50688f; font-size: 15px; line-height: 1.55; }
+.login-form { display: grid; gap: 18px; }
+.field-group label { display: block; margin-bottom: 8px; color: #102f5e; font-size: 14px; font-weight: 680; }
+.input-wrap { position: relative; }
+.input-wrap > svg { position: absolute; top: 50%; left: 15px; width: 20px; height: 20px; transform: translateY(-50%); color: #5f7596; stroke-width: 2; }
+.input-wrap input { width: 100%; height: 49px; padding: 0 48px; border: 1px solid #c8d9ed; border-radius: 9px; outline: none; background: #ffffffc9; box-shadow: 0 1px 2px #2747730b; color: #142f57; font: inherit; font-size: 14px; transition: border-color .18s, box-shadow .18s; }
+.input-wrap input::placeholder { color: #90a2bb; }
+.input-wrap input:focus { border-color: #3a8be0; box-shadow: 0 0 0 3px #4b9ef01c; }
+.password-toggle { position: absolute; top: 50%; right: 8px; display: grid; width: 36px; height: 36px; transform: translateY(-50%); place-items: center; border: 0; border-radius: 7px; background: transparent; color: #637999; cursor: pointer; }
+.password-toggle:hover { background: #eff5fb; }
+.password-toggle svg { width: 19px; height: 19px; }
+.login-options { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: -1px; color: #3d567c; font-size: 13px; }
+.remember-option { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.remember-option input { width: 17px; height: 17px; margin: 0; accent-color: #0872ce; }
+.forgot-button { padding: 2px 0; border: 0; background: transparent; color: #0876d7; font: inherit; cursor: pointer; }
+.forgot-button:hover { color: #034f9b; text-decoration: underline; }
+.login-error { padding: 10px 12px; border: 1px solid #fecaca; border-radius: 8px; background: #fff1f2; color: #be123c; font-size: 13px; }
+.sign-in-button { display: flex; height: 52px; align-items: center; justify-content: center; gap: 11px; margin-top: 1px; border: 0; border-radius: 9px; background: linear-gradient(105deg, #07385f, #06416b); box-shadow: 0 8px 18px #0b42651f; color: white; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform .15s, background .15s; }
+.sign-in-button:hover { transform: translateY(-1px); background: #052f52; }
+.sign-in-button svg { width: 21px; height: 21px; }
+.authorized-note { display: flex; align-items: center; gap: 9px; margin: 23px 0 22px; color: #50688f; font-size: 12px; white-space: nowrap; }
+.authorized-note span { height: 1px; flex: 1; background: #d8e4f2; }
+.authorized-note svg { width: 16px; height: 16px; color: #7890b2; }
+.secure-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid #d9eafb; border-radius: 11px; background: #eaf4ffb8; }
+.secure-icon { display: grid; width: 46px; height: 46px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #ccefdc; color: #17904b; }
+.secure-icon svg { width: 25px; height: 25px; }
+.secure-card strong { color: #163b70; font-size: 13px; }
+.secure-card p { margin: 3px 0 0; color: #60799d; font-size: 12px; line-height: 1.45; }
+.rural-horizon { position: absolute; right: 0; bottom: 40px; left: 0; height: 92px; opacity: .72; pointer-events: none; }
+.rural-horizon svg { width: 100%; height: 100%; }
+.login-footer { position: absolute; right: 18px; bottom: 15px; left: 18px; z-index: 1; display: flex; justify-content: center; gap: 9px; color: #365985; font-size: 10px; white-space: nowrap; }
+.login-footer span { color: #8aa5c7; }
+
+@media (max-width: 1050px) {
+  .login-shell { grid-template-columns: minmax(0, 1fr) minmax(430px, .9fr); }
+  .map-tagline { right: 22px; font-size: 14px; }
+  .map-brand { left: 22px; }
+  .map-legend { left: 20px; width: 210px; }
+  .label-drainage { left: 43%; }
+}
+
+@media (max-width: 780px) {
+  .login-shell { display: block; min-height: 100vh; }
+  .watershed-panel { display: none; }
+  .login-panel { min-height: 100vh; padding: 36px 24px 76px; }
+  .login-content { width: min(100%, 460px); }
+  .rural-horizon { bottom: 37px; }
+}
+
+@media (max-height: 760px) and (min-width: 781px) {
+  .login-panel { padding-top: 24px; padding-bottom: 54px; }
+  .login-logo { width: 58px; height: 58px; }
+  .login-logo-copy strong { font-size: 32px; }
+  .login-rule { height: 17px; margin: 10px auto 13px; }
+  .login-heading { margin-bottom: 20px; }
+  .login-heading p { margin-top: 7px; }
+  .login-form { gap: 13px; }
+  .input-wrap input { height: 46px; }
+  .authorized-note { margin: 16px 0; }
+  .secure-card { padding: 10px 13px; }
+  .secure-icon { width: 40px; height: 40px; }
+}
