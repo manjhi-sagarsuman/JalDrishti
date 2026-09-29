@@ -1,13 +1,164 @@
 @import "tailwindcss";
 
-html,
-body,
-#root {
-  margin: 0;
-  min-height: 100%;
+@theme {
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-brand-900: #082f57;
+  --color-brand-800: #0b416c;
+  --color-brand-700: #1264a3;
+  --color-brand-600: #168be5;
+  --color-environment-700: #28734f;
+  --color-environment-600: #378b5c;
+  --color-ink: #172b3d;
+  --color-muted: #647789;
+  --color-surface: #ffffff;
+  --color-canvas: #f3f7fa;
+  --color-line: #d8e2e9;
+
+  --radius-card: 0.875rem;
+  --shadow-card: 0 1px 3px rgb(15 45 68 / 8%), 0 8px 24px rgb(15 45 68 / 5%);
 }
 
-body {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    margin: 0;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 3px solid rgb(22 139 229 / 55%);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .type-page-title {
+    @apply text-2xl font-bold tracking-tight text-ink sm:text-3xl;
+  }
+
+  .type-section-title {
+    @apply text-lg font-semibold tracking-tight text-ink sm:text-xl;
+  }
+
+  .type-body {
+    @apply text-sm leading-6 text-muted sm:text-base;
+  }
+
+  .type-caption {
+    @apply text-xs leading-5 text-muted;
+  }
+
+  .card {
+    @apply rounded-card border border-line bg-surface p-4 shadow-card sm:p-5;
+  }
+
+  .card-interactive {
+    @apply transition-shadow hover:shadow-lg;
+  }
+
+  .btn {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-brand-800 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-900 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-line bg-white px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-canvas disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-quiet {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-brand-800 transition-colors hover:bg-blue-50 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .form-label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+
+  .form-control {
+    @apply min-h-10 w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-muted/75 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/20;
+  }
+
+  .form-hint {
+    @apply mt-1 text-xs leading-5 text-muted;
+  }
+
+  .form-error {
+    @apply mt-1 text-sm text-red-700;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold leading-4;
+  }
+
+  .badge-neutral {
+    @apply inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold leading-4 text-slate-700;
+  }
+
+  .badge-info {
+    @apply inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold leading-4 text-blue-800;
+  }
+
+  .badge-success {
+    @apply inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold leading-4 text-green-800;
+  }
+
+  .badge-warning {
+    @apply inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold leading-4 text-amber-800;
+  }
+
+  .badge-danger {
+    @apply inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold leading-4 text-red-800;
+  }
+}
+
+@layer utilities {
+  .page-container {
+    @apply mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-section {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  .content-grid {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5;
+  }
+
+  .content-grid-3 {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 lg:gap-5;
+  }
+
+  .content-grid-4 {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 lg:gap-5;
+  }
 }

@@ -1,244 +1,69 @@
-import {
-  BarChart3,
-  Camera,
-  FileText,
-  Home,
-  Images,
-  Layers3,
-  Map,
-  MapPinned,
-  MonitorCheck,
-  Upload,
-  Settings,
-  BookOpen,
-} from "lucide-react"
+import { NavLink, useLocation } from "react-router-dom"
+import { navigationSections } from "../routes/routeConfig"
+import { useAuth } from "../hooks/useAuth"
 
 interface SidebarProps {
-  activePage: string
-  onNavigate: (page: string) => void
+  mobile?: boolean
+  onNavigate?: () => void
 }
 
-function Sidebar({ activePage, onNavigate }: SidebarProps) {
-  const publicItems = [
-    {
-      id: "dashboard",
-      label: "Home",
-      icon: Home,
-    },
-    {
-      id: "map",
-      label: "Explore Map",
-      icon: Map,
-    },
-    {
-      id: "watersheds",
-      label: "Watersheds",
-      icon: MapPinned,
-    },
-    {
-      id: "images",
-      label: "Field Images",
-      icon: Images,
-    },
-    {
-      id: "layers",
-      label: "Data Layers",
-      icon: Layers3,
-    },
-    {
-      id: "reports",
-      label: "Reports",
-      icon: FileText,
-    },
-    {
-      id: "documentation",
-      label: "Documentation",
-      icon: BookOpen,
-    },
-  ]
-
-  const governmentItems = [
-    {
-      id: "government-dashboard",
-      label: "Dashboard",
-      icon: BarChart3,
-    },
-    {
-      id: "planning",
-      label: "Project Planning",
-      icon: MapPinned,
-    },
-    {
-      id: "analysis",
-      label: "Analysis Tools",
-      icon: BarChart3,
-    },
-    {
-      id: "upload",
-      label: "Data Upload",
-      icon: Upload,
-    },
-    {
-      id: "monitoring",
-      label: "Monitoring",
-      icon: MonitorCheck,
-    },
-    {
-      id: "export",
-      label: "Export Reports",
-      icon: FileText,
-    },
-  ]
+function Sidebar({ mobile = false, onNavigate }: SidebarProps) {
+  const { profile } = useAuth()
+  const { search } = useLocation()
+  const currentParams = new URLSearchParams(search)
+  const scopeParams = new URLSearchParams()
+  for (const key of ["watershed", "from", "to"]) {
+    const value = currentParams.get(key)
+    if (value) scopeParams.set(key, value)
+  }
+  const scopeSearch = scopeParams.size ? `?${scopeParams.toString()}` : ""
+  const visibleSections = navigationSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.roles || (profile && item.roles.includes(profile.role))),
+    }))
+    .filter((section) => section.items.length > 0)
 
   return (
-    <aside className="fixed left-0 top-0 z-50 flex h-screen w-64 flex-col bg-[#082F57] text-white shadow-xl">
-
-      {<img
-          src="/logos/jaldrishti-icon.png"
-          alt="JalDrishti"
-          className="h-11 w-11 rounded-xl object-contain"
-        />}
-
-      <div className="border-b border-white/10 px-5 py-5">
-
-        <div className="flex items-center gap-3">
-
-          <img
-            src="/logos/jaldrishti-icon.png"
-            alt="JalDrishti"
-            className="h-11 w-11 rounded-xl object-contain"
-          />
-
-          <div>
-            <h1 className="text-lg font-bold tracking-tight">
-              JalDrishti
-            </h1>
-
-            <p className="text-[11px] text-blue-200">
-              GeoAI Watershed Intelligence
-            </p>
-          </div>
-
+    <aside className={`${mobile ? "flex h-full w-full" : "fixed inset-y-0 left-0 hidden w-64 lg:flex"} z-50 flex-col border-r border-white/10 bg-brand-900 text-white`}>
+      <div className="flex h-18 shrink-0 items-center gap-3 border-b border-white/10 px-5">
+        <img alt="" className="size-10 rounded-lg object-contain" src="/logos/jaldrishti-icon.png" />
+        <div className="min-w-0">
+          <p className="truncate text-base font-bold tracking-tight">JalDrishti</p>
+          <p className="mt-0.5 truncate text-[11px] text-blue-100/75">Watershed decision support</p>
         </div>
-
       </div>
 
-      {/* ================================
-          PUBLIC NAVIGATION
-          ================================ */}
+      <nav aria-label="Primary navigation" className="flex-1 space-y-5 overflow-y-auto px-3 py-5">
+        {visibleSections.map((section) => (
+          <section key={section.label}>
+            <h2 className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-100/65">
+              {section.label}
+            </h2>
+            <ul className="space-y-1">
+              {section.items.map(({ path, label, icon: Icon }) => (
+                <li key={path}>
+                  <NavLink
+                    className={({ isActive }) => `group flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-white ${isActive ? "bg-brand-600 text-white shadow-sm" : "text-blue-50/90 hover:bg-white/10 hover:text-white"}`}
+                    onClick={onNavigate}
+                    to={`${path}${scopeSearch}`}
+                  >
+                    <Icon aria-hidden="true" className="size-4.5 shrink-0 opacity-90" />
+                    <span className="truncate">{label}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </nav>
 
-      <div className="flex-1 overflow-y-auto px-3 py-5">
-
-        <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-200">
-          Explore
-        </p>
-
-        <nav className="space-y-1">
-
-          {publicItems.map((item) => {
-
-            const Icon = item.icon
-
-            const active =
-              activePage === item.id
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all ${
-                  active
-                    ? "bg-[#168BE5] text-white shadow-lg shadow-blue-950/20"
-                    : "text-blue-100 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-
-                <Icon
-                  className={`h-[18px] w-[18px] ${
-                    active
-                      ? "text-white"
-                      : "text-blue-200 group-hover:text-white"
-                  }`}
-                />
-
-                <span>{item.label}</span>
-
-              </button>
-            )
-          })}
-
-        </nav>
-
-        {/* ================================
-            GOVERNMENT SECTION
-            ================================ */}
-
-        <div className="mt-8">
-
-          <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-200">
-            For Government Officials
-          </p>
-
-          <nav className="space-y-1">
-
-            {governmentItems.map((item) => {
-
-              const Icon = item.icon
-
-              const active =
-                activePage === item.id
-
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onNavigate(item.id)}
-                  className={`group flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all ${
-                    active
-                      ? "bg-[#168BE5] text-white shadow-lg"
-                      : "text-blue-100 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-
-                  <Icon className="h-[18px] w-[18px]" />
-
-                  <span>{item.label}</span>
-
-                </button>
-              )
-            })}
-
-          </nav>
-
+      <div className="shrink-0 border-t border-white/10 p-4">
+        <div className="rounded-xl bg-white/[0.07] px-3 py-3">
+          <p className="text-xs font-semibold text-white">SIH26015</p>
+          <p className="mt-1 text-xs leading-5 text-blue-100/70">Geospatial watershed monitoring</p>
         </div>
-
       </div>
-
-      {/* ================================
-          SIDEBAR FOOTER
-          ================================ */}
-
-      <div className="border-t border-white/10 p-3">
-
-        <div className="rounded-xl bg-white/10 p-3">
-
-          <div className="flex items-center gap-2">
-
-            <Settings className="h-4 w-4 text-blue-200" />
-
-            <span className="text-xs font-medium">
-              JalDrishti Platform
-            </span>
-
-          </div>
-
-          <p className="mt-1 text-[10px] leading-4 text-blue-200">
-            GeoAI • Water • Land • Rural Development
-          </p>
-
-        </div>
-
-      </div>
-
     </aside>
   )
 }

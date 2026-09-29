@@ -1,20 +1,7 @@
-import { useState } from "react"
-import DashboardLayout from "./layouts/DashboardLayout"
-import Dashboard from "./pages/Dashboard"
-import Login from "./pages/Login"
+import AppRoutes from "./routes/AppRoutes"
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false)
-
-  if (!loggedIn) {
-    return <Login onLogin={() => setLoggedIn(true)} />
-  }
-
-  return (
-    <DashboardLayout>
-      <Dashboard />
-    </DashboardLayout>
-  )
+  return <AppRoutes />
 }
 
 export default App

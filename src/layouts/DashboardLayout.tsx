@@ -1,37 +1,34 @@
-import { useState, type ReactNode } from "react"
-import Sidebar from "../components/Sidebar"
+import { useState } from "react"
+import { Outlet, useLocation } from "react-router-dom"
 import Navbar from "../components/Navbar"
+import Sidebar from "../components/Sidebar"
+import { Drawer } from "../components/ui"
+import { getAppPage } from "../routes/routeConfig"
 
-interface DashboardLayoutProps {
-  children: React.ReactNode
-}
-
-function DashboardLayout({ children }: DashboardLayoutProps) {
-
-  const [activePage, setActivePage] = useState("dashboard")
+function DashboardLayout() {
+  const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false)
+  const { pathname } = useLocation()
+  const currentPage = getAppPage(pathname)
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-
-      {/* SIDEBAR */}
-      <Sidebar
-        activePage={activePage}
-        onNavigate={setActivePage}
-      />
-
-      {/* MAIN AREA */}
-      <div className="ml-64 min-h-screen">
-
-        <Navbar />
-
-        <main className="p-6">
-
-          {children}
-
+    <div className="min-h-screen bg-canvas text-ink">
+      <Sidebar />
+      <div className="min-h-screen lg:pl-64">
+        <Navbar onMenuClick={() => setMobileNavigationOpen(true)} />
+        <main className="page-container py-5 sm:py-7">
+          <Outlet />
         </main>
-
       </div>
-
+      <Drawer
+        className="max-w-[19rem]"
+        onClose={() => setMobileNavigationOpen(false)}
+        open={mobileNavigationOpen}
+        side="left"
+        title="Navigation"
+      >
+        <Sidebar mobile onNavigate={() => setMobileNavigationOpen(false)} />
+      </Drawer>
+      <span className="sr-only" aria-live="polite">{currentPage ? `${currentPage.label} page` : "Application page"}</span>
     </div>
   )
 }

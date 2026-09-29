@@ -43,7 +43,7 @@ function PublicHome() {
 
             <Link
               to="/login"
-              className="rounded-lg bg-[#062b4c] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0b416c]"
+              className="rounded-lg bg-[#062b4c] px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-800"
             >
               Sign In
             </Link>
@@ -96,7 +96,7 @@ function PublicHome() {
 
               <Link
                 to="/login"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#062b4c] px-6 py-3.5 text-sm font-semibold text-white hover:bg-[#0b416c]"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#062b4c] px-6 py-3.5 text-sm font-semibold text-white hover:bg-brand-800"
               >
                 Explore JalDrishti
                 <ChevronRight className="h-4 w-4" />
@@ -123,7 +123,7 @@ function PublicHome() {
             <img
               src="/images/jaldrishti-login-hero.jpg"
               alt="Watershed satellite visualization"
-              className="h-[320px] w-full rounded-2xl object-cover sm:h-[400px]"
+              className="h-80 w-full rounded-2xl object-cover sm:h-100"
             />
 
           </div>
