@@ -48,7 +48,7 @@ function Login() {
   return (
     <main className="grid min-h-screen bg-white lg:grid-cols-[minmax(0,1.05fr)_minmax(28rem,0.95fr)]">
       <section className="relative hidden min-h-screen overflow-hidden bg-brand-900 px-10 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-16" aria-label="JalDrishti platform introduction">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-36 top-24 size-[34rem] rounded-full border border-white/10">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-36 top-24 size-136 rounded-full border border-white/10">
           <span className="absolute inset-10 rounded-full border border-white/10" />
           <span className="absolute inset-24 rounded-full border border-white/10" />
           <span className="absolute inset-40 rounded-full bg-environment-600/20 blur-3xl" />
@@ -62,7 +62,7 @@ function Login() {
         </div>
 
         <div className="relative max-w-xl py-14">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-medium text-blue-100">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/6 px-3 py-1.5 text-xs font-medium text-blue-100">
             <ShieldCheck aria-hidden="true" className="size-4" /> SIH26015 workspace
           </p>
           <h1 className="text-4xl font-semibold leading-tight tracking-tight xl:text-5xl">Geospatial evidence for watershed decisions.</h1>
@@ -70,15 +70,15 @@ function Login() {
             A secure workspace for geographic data, field evidence, and environmental analysis.
           </p>
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
+            <div className="rounded-xl border border-white/10 bg-white/6 p-4">
               <MapPinned aria-hidden="true" className="size-5 text-sky-200" />
               <p className="mt-3 text-sm font-medium">Spatial context</p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
+            <div className="rounded-xl border border-white/10 bg-white/6 p-4">
               <Activity aria-hidden="true" className="size-5 text-emerald-200" />
               <p className="mt-3 text-sm font-medium">Environmental indicators</p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/[0.06] p-4">
+            <div className="rounded-xl border border-white/10 bg-white/6 p-4">
               <LockKeyhole aria-hidden="true" className="size-5 text-blue-100" />
               <p className="mt-3 text-sm font-medium">Role-based access</p>
             </div>

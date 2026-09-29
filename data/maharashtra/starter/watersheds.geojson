@@ -1,0 +1,144 @@
+{
+  "type": "FeatureCollection",
+  "name": "jaldrishti_demo_watersheds",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "EPSG:4326"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "watershed_code": "WTR-JUN-01",
+        "watershed_name": "Junnar Upper Tributary Cluster",
+        "village_codes": [
+          555239,
+          555241
+        ],
+        "area_km2": 7.4,
+        "centroid_latitude": 19.325,
+        "centroid_longitude": 73.874,
+        "status": "MONITORED",
+        "boundary_source": "DEMO_DERIVED_BUFFER",
+        "is_demo_boundary": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              73.82199999999999,
+              19.287
+            ],
+            [
+              73.926,
+              19.287
+            ],
+            [
+              73.926,
+              19.363
+            ],
+            [
+              73.82199999999999,
+              19.363
+            ],
+            [
+              73.82199999999999,
+              19.287
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "watershed_code": "WTR-JUN-02",
+        "watershed_name": "Junnar Shiroli\u2013Warulwadi Cluster",
+        "village_codes": [
+          555351,
+          555383
+        ],
+        "area_km2": 11.2,
+        "centroid_latitude": 19.145,
+        "centroid_longitude": 73.944,
+        "status": "IN_REVIEW",
+        "boundary_source": "DEMO_DERIVED_BUFFER",
+        "is_demo_boundary": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              73.892,
+              19.107
+            ],
+            [
+              73.99600000000001,
+              19.107
+            ],
+            [
+              73.99600000000001,
+              19.183
+            ],
+            [
+              73.892,
+              19.183
+            ],
+            [
+              73.892,
+              19.107
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "watershed_code": "WTR-MUL-01",
+        "watershed_name": "Mulshi Andeshe\u2013Asade Cluster",
+        "village_codes": [
+          556141,
+          556155
+        ],
+        "area_km2": 9.6,
+        "centroid_latitude": 18.525,
+        "centroid_longitude": 73.571,
+        "status": "MONITORED",
+        "boundary_source": "DEMO_DERIVED_BUFFER",
+        "is_demo_boundary": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              73.529,
+              18.493
+            ],
+            [
+              73.613,
+              18.493
+            ],
+            [
+              73.613,
+              18.557
+            ],
+            [
+              73.529,
+              18.557
+            ],
+            [
+              73.529,
+              18.493
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

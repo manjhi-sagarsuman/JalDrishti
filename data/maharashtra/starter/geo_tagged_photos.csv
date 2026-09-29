@@ -1,0 +1,10 @@
+image_file,intervention_code,watershed_code,latitude,longitude,capture_date,file_name,description,verification_status
+INT-JUN-001.jpg,INT-JUN-001,WTR-JUN-01,19.3098,73.896,2026-09-29,INT-JUN-001.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-JUN-002.jpg,INT-JUN-002,WTR-JUN-01,19.3135,73.8991,2026-09-29,INT-JUN-002.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-JUN-003.jpg,INT-JUN-003,WTR-JUN-01,19.3392,73.8496,2026-09-29,INT-JUN-003.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-JUN-004.jpg,INT-JUN-004,WTR-JUN-02,19.1893,73.9242,2026-09-29,INT-JUN-004.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-JUN-005.jpg,INT-JUN-005,WTR-JUN-02,19.1034,73.9645,2026-09-29,INT-JUN-005.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-JUN-006.jpg,INT-JUN-006,WTR-JUN-02,19.1007,73.967,2026-09-29,INT-JUN-006.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-MUL-001.jpg,INT-MUL-001,WTR-MUL-01,18.5447,73.5607,2026-09-29,INT-MUL-001.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-MUL-002.jpg,INT-MUL-002,WTR-MUL-01,18.5052,73.5799,2026-09-29,INT-MUL-002.jpg,Demo placeholder for prototype integration,placeholder_generated
+INT-MUL-003.jpg,INT-MUL-003,WTR-MUL-01,18.5074,73.5814,2026-09-29,INT-MUL-003.jpg,Demo placeholder for prototype integration,placeholder_generated

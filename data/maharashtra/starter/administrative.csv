@@ -1,0 +1,7 @@
+state_code,state_name,district_code,district_name,block_code,block_name,village_code,village_name,village_latitude,village_longitude,boundary_status
+27,Maharashtra,490,Pune,4517,Junnar,555239,Pimpalgaon Joga,19.311,73.897,Census/LGD-linked sample
+27,Maharashtra,490,Pune,4517,Junnar,555241,Sanganore,19.337931106,73.8502907395,Census/LGD-linked sample
+27,Maharashtra,490,Pune,4517,Junnar,555351,Shiroli Bk,19.1879704415,73.922938622,Census/LGD-linked sample
+27,Maharashtra,490,Pune,4517,Junnar,555383,Warulwadi,19.1022873015,73.9656070515,Census/LGD-linked sample
+27,Maharashtra,490,Pune,4520,Mulshi,556141,Asade,18.5438992765,73.5613753225,Census/LGD-linked sample
+27,Maharashtra,490,Pune,4520,Mulshi,556155,Andeshe,18.506137711,73.580451993,Census/LGD-linked sample

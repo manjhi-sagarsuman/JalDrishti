@@ -23,7 +23,7 @@ function RoutePlaceholder({ page }: RoutePlaceholderProps) {
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-base font-semibold text-ink">Module setup</h2>
           <p className="mt-2 text-sm leading-6 text-muted">
-            This route is ready for its feature phase. No demonstration records or official data are shown here.
+            This route is ready for its feature phase. No records are available here yet.
           </p>
         </div>
       </section>

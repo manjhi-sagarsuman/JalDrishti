@@ -3,6 +3,7 @@ import { getSupabaseClient } from "../lib/supabase"
 import { loadAnalyticsWorkspace, type AnalyticsWorkspace } from "./analyticsService"
 import { loadEvidenceDirectory, type EvidenceDirectory } from "./evidenceService"
 import { loadInterventionDirectory, type InterventionDirectory } from "./interventionService"
+import { loadRealMapFeatures } from "./mapApiService"
 
 export interface ExplorerWatershed {
   id: string
@@ -42,10 +43,9 @@ export async function loadWatershedExplorerWorkspace(): Promise<WatershedExplore
     loadInterventionDirectory(),
     client.from("watersheds").select("id, code, name, area_sq_km, status, updated_at").order("name").limit(2000),
     client.from("watershed_villages").select("watershed_id, village_id").limit(20000),
-    client.rpc("get_watershed_explorer_feature_collection"),
+    loadRealMapFeatures(),
   ])
   if (watershedRows.error || villageRows.error) throw new Error("Watershed details could not be loaded in the current data scope.")
-  if (featureRows.error) throw new Error("Watershed map layers are unavailable. Apply the watershed explorer GeoJSON migration and check RLS access.")
 
   const counts = new Map<string, number>()
   for (const row of villageRows.data ?? []) counts.set(String(row.watershed_id), (counts.get(String(row.watershed_id)) ?? 0) + 1)
@@ -68,5 +68,5 @@ export async function loadWatershedExplorerWorkspace(): Promise<WatershedExplore
       lastUpdated: typeof metadata.updated_at === "string" ? metadata.updated_at : null,
     }]
   })
-  return { watersheds, features: parseFeatureCollection(featureRows.data), evidence, interventions, analytics }
+  return { watersheds, features: parseFeatureCollection(featureRows), evidence, interventions, analytics }
 }

@@ -6,6 +6,7 @@ import { ProvenancePanel } from "../../components/ProvenancePanel"
 import { Badge, Button, Card, DateRangePicker, EmptyState, ErrorState, Input, LoadingState, Modal, PageHeader, SectionHeader, Select, StatusBadge, type DateRange, type SelectOption } from "../../components/ui"
 import { MapView, type MapFeatureCollection } from "../../maps"
 import { useAuth } from "../../hooks/useAuth"
+import { isPrototypeMode } from "../../lib/appConfig"
 import { isWithinRouteDateRange, readRouteDateRange } from "../../lib/routeScope"
 import {
   ACCEPTED_EVIDENCE_MIME_TYPES,
@@ -361,7 +362,7 @@ function EvidenceModule() {
   return (
     <div className="page-section">
       <PageHeader
-        actions={<Button disabled={!directory || Boolean(configurationError)} leadingIcon={Plus} onClick={() => setUploadOpen(true)}>Add field evidence</Button>}
+        actions={!isPrototypeMode && <Button disabled={!directory || Boolean(configurationError)} leadingIcon={Plus} onClick={() => setUploadOpen(true)}>Add field evidence</Button>}
         breadcrumbs={<Breadcrumbs items={[{ label: "GIS" }, { label: "Field Evidence" }]} />}
         description="Review geo-tagged field observations, locations, and verification status."
         eyebrow="GIS workspace"
@@ -387,7 +388,7 @@ function EvidenceModule() {
           <section aria-label="Evidence list" className="min-w-0 space-y-3">
             <SectionHeader description={`${filteredRecords.length} of ${records.length} records`} title="Evidence list" />
             {loading ? <Card><LoadingState label="Loading field evidence" rows={4} /></Card> : filteredRecords.length > 0 ? filteredRecords.map((record) => <EvidenceCard createdByLabel={creatorLabel(record)} key={record.id} record={record} />) : (
-              <Card><EmptyState action={<Button disabled={!directory} leadingIcon={Plus} onClick={() => setUploadOpen(true)}>Add field evidence</Button>} description={records.length ? "Change the filters or add a new observation." : "No evidence records are available in your permitted watershed scope yet."} icon={Camera} title={records.length ? "No matching evidence" : "No field evidence yet"} /></Card>
+              <Card><EmptyState action={!isPrototypeMode && <Button disabled={!directory} leadingIcon={Plus} onClick={() => setUploadOpen(true)}>Add field evidence</Button>} description={records.length ? "Change the filters or add a new observation." : "No evidence records are available in your permitted watershed scope yet."} icon={Camera} title={records.length ? "No matching evidence" : "No field evidence yet"} /></Card>
             )}
           </section>
 
@@ -399,7 +400,7 @@ function EvidenceModule() {
         </div>
       </>}
 
-      <Modal className="max-w-3xl" onClose={() => setUploadOpen(false)} open={uploadOpen} title="Add field evidence">
+      <Modal className="max-w-3xl" onClose={() => setUploadOpen(false)} open={!isPrototypeMode && uploadOpen} title="Add field evidence">
         {directory && <EvidenceUploadForm directory={directory} initialWatershedId={watershedFilter} onClose={() => setUploadOpen(false)} onUploaded={() => void load()} />}
       </Modal>
     </div>

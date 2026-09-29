@@ -19,7 +19,7 @@ function MapPage() {
   const [workspace, setWorkspace] = useState<Awaited<ReturnType<typeof loadWatershedExplorerWorkspace>> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [visibleLayers, setVisibleLayers] = useState<MapLayerId[]>(["watershed-boundary", "sub-watersheds", "geo-tagged-photos", "interventions"])
+  const [visibleLayers, setVisibleLayers] = useState<MapLayerId[]>(["district-boundary", "block-boundary", "village-boundary", "watershed-boundary", "sub-watersheds", "geo-tagged-photos", "interventions", "satellite-scenes", "vegetation-change"])
 
   useEffect(() => {
     let active = true

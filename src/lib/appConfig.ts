@@ -1,0 +1,1 @@
+export const isPrototypeMode = import.meta.env.VITE_PROTOTYPE_MODE === "true"

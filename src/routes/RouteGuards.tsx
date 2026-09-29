@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom"
 import { LoadingState } from "../components/ui"
 import type { AppPage } from "./routeConfig"
 import { useAuth } from "../hooks/useAuth"
+import { isPrototypeMode } from "../lib/appConfig"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -11,6 +12,8 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { session, profile, loading, profileStatus, profileError } = useAuth()
   const location = useLocation()
+
+  if (isPrototypeMode) return children
 
   if (loading) {
     return (
@@ -42,7 +45,7 @@ interface RoleGuardProps {
 
 export function RoleGuard({ page, children }: RoleGuardProps) {
   const { profile } = useAuth()
-  if (!profile) return <Navigate replace to="/unauthorized" />
+  if (!profile) return page.roles ? <Navigate replace state={{ message: "Authorized access required for this module." }} to="/unauthorized" /> : children
   if (page.roles && !page.roles.includes(profile.role)) {
     return <Navigate replace state={{ message: "Your account role does not have access to this module." }} to="/unauthorized" />
   }

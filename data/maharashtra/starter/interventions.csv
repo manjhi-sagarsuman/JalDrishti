@@ -1,0 +1,10 @@
+intervention_code,intervention_name,watershed_code,village_code,type,latitude,longitude,status,start_date,completion_date,description
+INT-JUN-001,Check Dam 01,WTR-JUN-01,555239,check dam,19.3098,73.896,completed,2024-06-15,2024-09-10,Demonstration intervention record for UI/API wiring
+INT-JUN-002,Farm Pond 01,WTR-JUN-01,555239,farm pond,19.3135,73.8991,completed,2024-07-02,2024-10-20,Demonstration intervention record for UI/API wiring
+INT-JUN-003,Contour Bund 01,WTR-JUN-01,555241,contour bund,19.3392,73.8496,in_progress,2025-06-12,,Demonstration intervention record for UI/API wiring
+INT-JUN-004,Loose Boulder Structure 01,WTR-JUN-02,555351,loose boulder structure,19.1893,73.9242,completed,2023-08-01,2023-11-14,Demonstration intervention record for UI/API wiring
+INT-JUN-005,Percolation Trench 01,WTR-JUN-02,555383,percolation trench,19.1034,73.9645,completed,2024-05-20,2024-07-28,Demonstration intervention record for UI/API wiring
+INT-JUN-006,Farm Pond 02,WTR-JUN-02,555383,farm pond,19.1007,73.967,planned,2026-08-15,,Demonstration intervention record for UI/API wiring
+INT-MUL-001,Check Dam 02,WTR-MUL-01,556141,check dam,18.5447,73.5607,completed,2024-07-04,2024-10-01,Demonstration intervention record for UI/API wiring
+INT-MUL-002,Contour Bund 02,WTR-MUL-01,556155,contour bund,18.5052,73.5799,completed,2023-06-10,2023-09-18,Demonstration intervention record for UI/API wiring
+INT-MUL-003,Farm Pond 03,WTR-MUL-01,556155,farm pond,18.5074,73.5814,in_progress,2026-06-25,,Demonstration intervention record for UI/API wiring

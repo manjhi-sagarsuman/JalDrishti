@@ -11,6 +11,7 @@ import { ProtectedRoute, RoleGuard } from "./RouteGuards"
 import { appPages } from "./routeConfig"
 import { useAuth } from "../hooks/useAuth"
 import { useUserSettings } from "../lib/userSettings"
+import { isPrototypeMode } from "../lib/appConfig"
 
 const MapPage = lazy(() => import("../pages/MapPage"))
 const WatershedExplorer = lazy(() => import("../features/watershed/WatershedExplorer"))
@@ -24,10 +25,6 @@ const ReportsPage = lazy(() => import("../pages/ReportsPage"))
 const DataManagement = lazy(() => import("../features/data-management/DataManagement"))
 const UsersRolesPage = lazy(() => import("../features/users-roles/UsersRolesPage"))
 const SettingsPage = lazy(() => import("../features/settings/SettingsPage"))
-
-function LoginRoute() {
-  return <Login />
-}
 
 function ShellRoutes() {
   const { session } = useAuth()
@@ -76,7 +73,7 @@ function ShellRoutes() {
         ))}
         <Route element={<Navigate replace to="/dashboard" />} path="*" />
       </Route>
-      <Route element={<LoginRoute />} path="/login" />
+      <Route element={isPrototypeMode ? <Navigate replace to="/dashboard" /> : <Login />} path="/login" />
       <Route element={<Unauthorized />} path="/unauthorized" />
     </Routes>
   )

@@ -1,0 +1,4 @@
+watershed_code,watershed_name,linked_village_codes,area_km2,centroid_latitude,centroid_longitude,status,boundary_source,is_demo_boundary
+WTR-JUN-01,Junnar Upper Tributary Cluster,555239;555241,7.4,19.325,73.874,MONITORED,DEMO_DERIVED_BUFFER,True
+WTR-JUN-02,Junnar Shiroli–Warulwadi Cluster,555351;555383,11.2,19.145,73.944,IN_REVIEW,DEMO_DERIVED_BUFFER,True
+WTR-MUL-01,Mulshi Andeshe–Asade Cluster,556141;556155,9.6,18.525,73.571,MONITORED,DEMO_DERIVED_BUFFER,True

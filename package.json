@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "import:starter-data": "node scripts/import-starter-dataset.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,0 +1,16 @@
+{
+  "generated_on": "2026-09-29",
+  "scope": "Pune, Maharashtra starter set: Junnar + Mulshi",
+  "rows": {
+    "administrative": 6,
+    "watersheds": 3,
+    "interventions": 9,
+    "photos": 9,
+    "satellite_scenes": 6,
+    "satellite_observations": 18,
+    "change_analysis": 3,
+    "provenance": 8
+  },
+  "secrets_included": false,
+  "demo_records_present": true
+}
