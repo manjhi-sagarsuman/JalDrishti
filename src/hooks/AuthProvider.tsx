@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState, type ReactNode } from "react"
 import type { Session, SupabaseClient } from "@supabase/supabase-js"
 import { AuthContext } from "./authContext"
 import { appRoles, type AppRole, type UserProfile } from "./authTypes"
-import { getSupabaseClient, isSupabaseConfigured } from "../lib/supabase"
+import { getSupabaseClient, isSupabaseConfigured, supabaseUrl } from "../lib/supabase"
 
 function getInitialConfigurationError() {
   if (!isSupabaseConfigured) return "Supabase is not configured. Add the project URL and publishable key to your local .env file."
   try {
-    const url = new URL(import.meta.env.VITE_SUPABASE_URL?.trim() ?? "")
+    const url = new URL(supabaseUrl)
     if (url.protocol === "https:" || url.protocol === "http:") return null
   } catch {
     // Invalid URLs are reported as configuration errors below.
