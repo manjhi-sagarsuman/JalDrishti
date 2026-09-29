@@ -22,6 +22,7 @@ export function MapPopup({ title, layerId, properties = {}, onViewDetails }: Map
   const isEvidence = layerId === "geo-tagged-photos" || Boolean(properties.thumbnail_url || properties.image_url)
   const isWatershed = layerId === "watershed-boundary"
   const isIntervention = layerId?.startsWith("intervention") || layerId === "interventions"
+  const isSatellite = layerId === "satellite-scenes"
 
   const thumbnailUrl = (properties.thumbnail_url || properties.image_url) as string | undefined
   const status = (properties.verification_status || properties.status) as string | undefined
@@ -29,7 +30,15 @@ export function MapPopup({ title, layerId, properties = {}, onViewDetails }: Map
   const village = (properties.village || properties.village_name) as string | undefined
   const block = (properties.block || properties.block_name) as string | undefined
   const district = (properties.district || properties.district_name) as string | undefined
-  const date = (properties.date || properties.captured_at || properties.implementation_date) as string | undefined
+  const date = (properties.date || properties.captured_at || properties.implementation_date || properties.acquisitionDate || properties.acquired_at) as string | undefined
+
+  // Satellite scene specific properties
+  const sceneId = (properties.sceneId || properties.scene_id || properties.title) as string | undefined
+  const platform = (properties.platform) as string | undefined
+  const sensor = (properties.sensor) as string | undefined
+  const cloudCover = properties.cloudCover ?? properties.cloud_cover ?? properties.cloud_cover_percent
+  const watershed = (properties.watershed || properties.watershed_code) as string | undefined
+  const assetRef = (properties.assetReference || properties.asset_reference_path || properties.asset_path) as string | undefined
 
   return (
     <article className="min-w-[15rem] max-w-[19rem] text-ink font-sans p-1">
@@ -140,7 +149,42 @@ export function MapPopup({ title, layerId, properties = {}, onViewDetails }: Map
           </>
         )}
 
-        {!isEvidence && !isWatershed && !isIntervention && (
+        {isSatellite && (
+          <>
+            {(platform || sensor) && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Platform / Sensor:</dt>
+                <dd className="font-medium text-brand-800">{[platform, sensor].filter(Boolean).join(" · ")}</dd>
+              </div>
+            )}
+            {watershed && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Watershed:</dt>
+                <dd className="font-medium">{watershed}</dd>
+              </div>
+            )}
+            {date && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Acquired:</dt>
+                <dd className="font-medium">{date.split("T")[0]}</dd>
+              </div>
+            )}
+            {cloudCover !== null && cloudCover !== undefined && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Cloud Cover:</dt>
+                <dd className="font-medium">{String(cloudCover)}%</dd>
+              </div>
+            )}
+            {assetRef && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Asset Ref:</dt>
+                <dd className="truncate max-w-[120px] font-mono text-[10px] text-muted" title={assetRef}>{assetRef}</dd>
+              </div>
+            )}
+          </>
+        )}
+
+        {!isEvidence && !isWatershed && !isIntervention && !isSatellite && (
           Object.entries(properties)
             .filter(([key]) => key !== "layerId" && key !== "title" && key !== "id")
             .map(([key, value]) => [key, displayValue(value)] as const)
@@ -164,7 +208,7 @@ export function MapPopup({ title, layerId, properties = {}, onViewDetails }: Map
             } else {
               window.dispatchEvent(
                 new CustomEvent("jaldrishti:view-details", {
-                  detail: { properties, layerId, title }
+                  detail: { properties, layerId, title, sceneId: sceneId || properties.id }
                 })
               )
             }

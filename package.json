@@ -10,7 +10,8 @@
     "import:starter-data": "node scripts/import-starter-dataset.mjs",
     "preview": "vite preview",
     "test:watershed": "node scripts/check-watershed-integration.mjs",
-    "test:intervention": "node scripts/check-intervention-integration.mjs"
+    "test:intervention": "node scripts/check-intervention-integration.mjs",
+    "test:satellite": "node ./scripts/check-satellite-integration.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
