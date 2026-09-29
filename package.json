@@ -13,7 +13,8 @@
     "test:intervention": "node scripts/check-intervention-integration.mjs",
     "test:satellite": "node ./scripts/check-satellite-integration.mjs",
     "test:indicator": "node ./scripts/check-indicator-integration.mjs",
-    "test:change-analysis": "node ./scripts/check-change-analysis-integration.mjs"
+    "test:change-analysis": "node ./scripts/check-change-analysis-integration.mjs",
+    "test:map-api": "node ./scripts/check-map-api-integration.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
