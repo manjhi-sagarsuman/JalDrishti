@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "import:starter-data": "node scripts/import-starter-dataset.mjs",
     "preview": "vite preview",
-    "test:watershed": "node scripts/check-watershed-integration.mjs"
+    "test:watershed": "node scripts/check-watershed-integration.mjs",
+    "test:intervention": "node scripts/check-intervention-integration.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
