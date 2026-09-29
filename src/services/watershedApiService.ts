@@ -1,6 +1,5 @@
 import { apiRequest, isApiConfigured } from "./apiClient"
 import { getSupabaseClient } from "../lib/supabase"
-import { SAMPLE_WATERSHEDS } from "./sampleGisData"
 
 export interface WatershedItem {
   id: string
@@ -13,16 +12,15 @@ export interface WatershedItem {
   areaHectares: number
   interventionsCount: number
   status: "ACTIVE" | "COMPLETED" | "PROPOSED"
-  coordinates: [number, number]
 }
 
 export async function fetchWatersheds(): Promise<WatershedItem[]> {
   if (isApiConfigured()) {
     try {
       const data = await apiRequest<WatershedItem[]>("/map/watersheds")
-      if (Array.isArray(data) && data.length > 0) return data
-    } catch (err) {
-      console.warn("API /map/watersheds unavailable, falling back to Supabase/sample:", err)
+      if (Array.isArray(data)) return data
+    } catch {
+      // API unavailable
     }
   }
 
@@ -30,25 +28,24 @@ export async function fetchWatersheds(): Promise<WatershedItem[]> {
   if (supabase) {
     try {
       const { data, error } = await supabase.from("watersheds").select("id, code, name, status, metadata")
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         return data.map((w: any) => ({
           id: w.id,
           code: w.code,
           name: w.name,
-          state: "Maharashtra",
-          district: w.metadata?.district ?? "Ahmednagar",
-          block: w.metadata?.block ?? "Parner",
-          villagesCount: w.metadata?.villages_count ?? 4,
-          areaHectares: Number(w.metadata?.area_ha ?? 1200),
-          interventionsCount: Number(w.metadata?.interventions_count ?? 25),
-          status: w.status,
-          coordinates: [74.4367, 19.0223]
+          state: w.metadata?.state ?? "",
+          district: w.metadata?.district ?? "",
+          block: w.metadata?.block ?? "",
+          villagesCount: Number(w.metadata?.villages_count ?? 0),
+          areaHectares: Number(w.metadata?.area_ha ?? 0),
+          interventionsCount: Number(w.metadata?.interventions_count ?? 0),
+          status: w.status
         }))
       }
     } catch {
-      // fallback
+      // Supabase query error
     }
   }
 
-  return SAMPLE_WATERSHEDS
+  return []
 }

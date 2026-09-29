@@ -1,17 +1,31 @@
 import { apiRequest, isApiConfigured } from "./apiClient"
 import { getSupabaseClient } from "../lib/supabase"
-import { SAMPLE_EVIDENCE, type SampleEvidence } from "./sampleGisData"
 
-export const EVIDENCE_STORAGE_BUCKET = (import.meta.env.VITE_SUPABASE_STORAGE_BUCKET ?? "geo-photos").trim()
+export interface EvidenceRecord {
+  id: string
+  title: string
+  description?: string
+  category: string
+  watershedId: string
+  interventionId: string | null
+  district: string
+  block: string
+  village: string
+  latitude: number
+  longitude: number
+  imageUrl: string
+  thumbnailUrl: string
+  uploadedAt: string
+  uploadedBy: string
+  verificationStatus: "VERIFIED" | "PENDING" | "REJECTED"
+}
 
 export interface EvidencePayload {
   title: string
-  description: string
+  description?: string
   category: string
   watershedId: string
-  watershedName?: string
   interventionId?: string | null
-  interventionName?: string | null
   district: string
   block: string
   village: string
@@ -24,93 +38,84 @@ export interface EvidencePayload {
   thumbnailUrl?: string
 }
 
-export async function fetchEvidenceList(): Promise<SampleEvidence[]> {
+export function getStorageBucketName(): string {
+  const bucket = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET
+  return typeof bucket === "string" && bucket.trim() ? bucket.trim() : "geo-photos"
+}
+
+export async function uploadEvidenceImage(file: File): Promise<{ publicUrl: string; storagePath: string }> {
+  const supabase = getSupabaseClient()
+  if (!supabase) {
+    throw new Error("Supabase is not configured.")
+  }
+
+  const bucket = getStorageBucketName()
+  const timestamp = Date.now()
+  const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_")
+  const path = `evidence/${timestamp}_${cleanName}`
+
+  const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
+    cacheControl: "3600",
+    upsert: false
+  })
+
+  if (error) {
+    throw new Error(`Storage upload failed: ${error.message}`)
+  }
+
+  const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(data.path)
+  return {
+    publicUrl: publicUrlData.publicUrl,
+    storagePath: data.path
+  }
+}
+
+export async function fetchEvidenceList(): Promise<EvidenceRecord[]> {
   if (isApiConfigured()) {
     try {
-      const data = await apiRequest<SampleEvidence[]>("/map/evidence")
-      if (Array.isArray(data) && data.length > 0) return data
-    } catch (err) {
-      console.warn("API /map/evidence unavailable, falling back to Supabase/sample:", err)
+      const data = await apiRequest<EvidenceRecord[]>("/map/evidence")
+      if (Array.isArray(data)) return data
+    } catch {
+      // API unavailable
     }
   }
 
   const supabase = getSupabaseClient()
   if (supabase) {
     try {
-      const { data, error } = await supabase.from("evidence").select("id, title, description, category, latitude, longitude, captured_at, verification_status, created_by, storage_path, watershed_id, watersheds(name), intervention_id, interventions(name)")
-      if (!error && Array.isArray(data) && data.length > 0) {
-        return data.map((item: any) => {
-          let signedUrl = "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=600&q=80"
-          if (item.storage_path) {
-            const { data: pubData } = supabase.storage.from(EVIDENCE_STORAGE_BUCKET).getPublicUrl(item.storage_path)
-            if (pubData?.publicUrl) signedUrl = pubData.publicUrl
-          }
-          return {
-            id: item.id,
-            title: item.title || "Geo-tagged Evidence",
-            description: item.description || "",
-            category: item.category || "Water Structure",
-            watershedId: item.watershed_id,
-            watershedName: item.watersheds?.name || "Watershed",
-            interventionId: item.intervention_id,
-            interventionName: item.interventions?.name || null,
-            district: "Ahmednagar",
-            block: "Parner",
-            village: "Ralegan Siddhi",
-            latitude: Number(item.latitude || 19.02),
-            longitude: Number(item.longitude || 74.43),
-            imageUrl: signedUrl,
-            thumbnailUrl: signedUrl,
-            uploadedBy: item.created_by || "Field Officer",
-            uploadedAt: item.captured_at || new Date().toISOString(),
-            verificationStatus: item.verification_status || "PENDING"
-          }
-        })
+      const { data, error } = await supabase
+        .from("evidence")
+        .select("*")
+        .order("created_at", { ascending: false })
+      if (!error && Array.isArray(data)) {
+        return data.map((d: any) => ({
+          id: d.id,
+          title: d.title ?? "Field Photo",
+          description: d.description,
+          category: d.category ?? "Water Structure",
+          watershedId: d.watershed_id,
+          interventionId: d.intervention_id,
+          district: d.district ?? "",
+          block: d.block ?? "",
+          village: d.village ?? "",
+          latitude: Number(d.latitude ?? 0),
+          longitude: Number(d.longitude ?? 0),
+          imageUrl: d.image_url ?? d.storage_path,
+          thumbnailUrl: d.thumbnail_url ?? d.image_url ?? d.storage_path,
+          uploadedAt: d.created_at ?? new Date().toISOString(),
+          uploadedBy: d.uploaded_by ?? "",
+          verificationStatus: d.verification_status ?? "PENDING"
+        }))
       }
     } catch {
-      // fallback
+      // Supabase query error
     }
   }
 
-  return SAMPLE_EVIDENCE
+  return []
 }
 
-export async function uploadEvidenceImage(file: File): Promise<{ storagePath: string; publicUrl: string }> {
-  const supabase = getSupabaseClient()
-  if (!supabase) {
-    // Generate object URL for local preview when Supabase is not connected
-    const objectUrl = URL.createObjectURL(file)
-    return {
-      storagePath: `local/${Date.now()}-${file.name}`,
-      publicUrl: objectUrl
-    }
-  }
-
-  const ext = file.name.split(".").pop() || "jpg"
-  const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`
-  const storagePath = `evidence/${fileName}`
-
-  const { error: uploadError } = await supabase.storage.from(EVIDENCE_STORAGE_BUCKET).upload(storagePath, file, {
-    cacheControl: "3600",
-    upsert: false
-  })
-
-  if (uploadError) {
-    console.warn("Storage upload failed or bucket absent, falling back to local object URL:", uploadError.message)
-    return {
-      storagePath,
-      publicUrl: URL.createObjectURL(file)
-    }
-  }
-
-  const { data: urlData } = supabase.storage.from(EVIDENCE_STORAGE_BUCKET).getPublicUrl(storagePath)
-  return {
-    storagePath,
-    publicUrl: urlData.publicUrl
-  }
-}
-
-export async function submitEvidenceRecord(payload: EvidencePayload): Promise<{ success: boolean; id: string }> {
+export async function submitEvidenceRecord(payload: EvidencePayload): Promise<{ success: boolean; id?: string }> {
   if (isApiConfigured()) {
     try {
       const response = await apiRequest<{ id: string }>("/evidence", {
@@ -119,33 +124,33 @@ export async function submitEvidenceRecord(payload: EvidencePayload): Promise<{ 
       })
       return { success: true, id: response.id }
     } catch (err) {
-      console.warn("API POST /evidence failed, falling back to Supabase/local:", err)
+      console.warn("API POST /evidence failed:", err)
     }
   }
 
   const supabase = getSupabaseClient()
   if (supabase) {
-    try {
-      const { data, error } = await supabase.from("evidence").insert({
-        title: payload.title,
-        description: payload.description,
-        category: payload.category,
-        watershed_id: payload.watershedId,
-        intervention_id: payload.interventionId || null,
-        latitude: payload.latitude,
-        longitude: payload.longitude,
-        captured_at: payload.date,
-        verification_status: payload.verificationStatus,
-        storage_path: payload.imageUrl
-      }).select("id").single()
+    const { data, error } = await supabase.from("evidence").insert({
+      title: payload.title,
+      description: payload.description,
+      category: payload.category,
+      watershed_id: payload.watershedId,
+      intervention_id: payload.interventionId,
+      district: payload.district,
+      block: payload.block,
+      village: payload.village,
+      latitude: payload.latitude,
+      longitude: payload.longitude,
+      image_url: payload.imageUrl,
+      uploaded_by: payload.uploadedBy,
+      verification_status: payload.verificationStatus,
+    }).select("id").single()
 
-      if (!error && data) {
-        return { success: true, id: data.id }
-      }
-    } catch {
-      // fallback
+    if (!error && data) {
+      return { success: true, id: data.id }
     }
+    throw new Error(error ? error.message : "Failed to record evidence in Supabase.")
   }
 
-  return { success: true, id: `demo-ev-${Date.now()}` }
+  throw new Error("Neither API nor Supabase is configured to save evidence.")
 }

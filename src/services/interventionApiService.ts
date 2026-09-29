@@ -1,11 +1,10 @@
 import { apiRequest, isApiConfigured } from "./apiClient"
 import { getSupabaseClient } from "../lib/supabase"
-import { SAMPLE_INTERVENTIONS } from "./sampleGisData"
 
 export interface InterventionItem {
   id: string
   interventionCode: string
-  type: "Check Dam" | "Farm Pond" | "Percolation Tank" | "Recharge Structure" | "Contour Trench" | "Plantation" | "Other"
+  type: string
   watershedId: string
   watershedName: string
   district: string
@@ -14,7 +13,7 @@ export interface InterventionItem {
   latitude: number
   longitude: number
   implementationDate: string
-  status: "COMPLETED" | "UNDER_CONSTRUCTION" | "SANCTIONED"
+  status: string
   imageCount: number
 }
 
@@ -22,9 +21,9 @@ export async function fetchInterventions(): Promise<InterventionItem[]> {
   if (isApiConfigured()) {
     try {
       const data = await apiRequest<InterventionItem[]>("/map/interventions")
-      if (Array.isArray(data) && data.length > 0) return data
-    } catch (err) {
-      console.warn("API /map/interventions unavailable, falling back to Supabase/sample:", err)
+      if (Array.isArray(data)) return data
+    } catch {
+      // API unavailable
     }
   }
 
@@ -32,29 +31,29 @@ export async function fetchInterventions(): Promise<InterventionItem[]> {
   if (supabase) {
     try {
       const { data, error } = await supabase.from("interventions").select("id, code, name, status, metadata, watershed_id, watersheds(name)")
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         return data.map((i: any) => ({
           id: i.id,
           interventionCode: i.code,
-          type: (i.metadata?.type as any) ?? "Check Dam",
+          type: String(i.metadata?.type ?? "Intervention"),
           watershedId: i.watershed_id,
-          watershedName: i.watersheds?.name ?? "Watershed",
-          district: i.metadata?.district ?? "Ahmednagar",
-          block: i.metadata?.block ?? "Parner",
-          village: i.metadata?.village ?? "Ralegan Siddhi",
-          latitude: Number(i.metadata?.latitude ?? 19.0245),
-          longitude: Number(i.metadata?.longitude ?? 74.4382),
-          implementationDate: i.metadata?.implementation_date ?? "2025-01-01",
+          watershedName: i.watersheds?.name ?? "",
+          district: i.metadata?.district ?? "",
+          block: i.metadata?.block ?? "",
+          village: i.metadata?.village ?? "",
+          latitude: Number(i.metadata?.latitude ?? 0),
+          longitude: Number(i.metadata?.longitude ?? 0),
+          implementationDate: i.metadata?.implementation_date ?? "",
           status: i.status,
-          imageCount: 2
+          imageCount: 0
         }))
       }
     } catch {
-      // fallback
+      // Supabase query error
     }
   }
 
-  return SAMPLE_INTERVENTIONS
+  return []
 }
 
 export async function createIntervention(payload: Partial<InterventionItem>): Promise<{ success: boolean; id?: string }> {
@@ -75,7 +74,7 @@ export async function createIntervention(payload: Partial<InterventionItem>): Pr
     try {
       const { data, error } = await supabase.from("interventions").insert({
         code: payload.interventionCode,
-        name: `${payload.type} - ${payload.interventionCode}`,
+        name: `${payload.type ?? "Intervention"} - ${payload.interventionCode ?? ""}`,
         watershed_id: payload.watershedId,
         metadata: {
           type: payload.type,
@@ -89,9 +88,9 @@ export async function createIntervention(payload: Partial<InterventionItem>): Pr
       }).select("id").single()
       if (!error && data) return { success: true, id: data.id }
     } catch {
-      // fallback
+      // Supabase insert error
     }
   }
 
-  return { success: true, id: `demo-int-${Date.now()}` }
+  return { success: false }
 }
