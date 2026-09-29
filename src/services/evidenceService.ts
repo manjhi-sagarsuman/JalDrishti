@@ -1,7 +1,7 @@
 import type { MapFeatureCollection } from "../maps"
-import { getSupabaseClient } from "../lib/supabase"
+import { getSupabaseClient, supabaseStorageBucket } from "../lib/supabase"
 
-export const GEO_PHOTOS_BUCKET = "geo-photos"
+export const GEO_PHOTOS_BUCKET = supabaseStorageBucket
 export const MAX_EVIDENCE_IMAGE_BYTES = 10 * 1024 * 1024
 export const ACCEPTED_EVIDENCE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const
 

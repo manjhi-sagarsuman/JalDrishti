@@ -1,5 +1,5 @@
 import { apiRequest, isApiConfigured } from "./apiClient"
-import { getSupabaseClient } from "../lib/supabase"
+import { getSupabaseClient, supabaseStorageBucket } from "../lib/supabase"
 
 export interface EvidenceRecord {
   id: string
@@ -39,8 +39,7 @@ export interface EvidencePayload {
 }
 
 export function getStorageBucketName(): string {
-  const bucket = import.meta.env.VITE_SUPABASE_STORAGE_BUCKET
-  return typeof bucket === "string" && bucket.trim() ? bucket.trim() : "geo-photos"
+  return supabaseStorageBucket
 }
 
 export async function uploadEvidenceImage(file: File): Promise<{ publicUrl: string; storagePath: string }> {

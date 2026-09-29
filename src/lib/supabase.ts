@@ -8,6 +8,11 @@ export const supabasePublishableKey = (
   ""
 ).trim().replace(/^["']|["']$/g, "")
 
+
+export const supabaseStorageBucket = (
+  import.meta.env.VITE_SUPABASE_STORAGE_BUCKET ?? "geo-photos"
+).trim().replace(/^["']|["']$/g, "") || "geo-photos"
+
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabasePublishableKey)
 
 let supabaseClient: SupabaseClient | undefined
