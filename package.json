@@ -14,7 +14,8 @@
     "test:satellite": "node ./scripts/check-satellite-integration.mjs",
     "test:indicator": "node ./scripts/check-indicator-integration.mjs",
     "test:change-analysis": "node ./scripts/check-change-analysis-integration.mjs",
-    "test:map-api": "node ./scripts/check-map-api-integration.mjs"
+    "test:map-api": "node ./scripts/check-map-api-integration.mjs",
+    "test:production-mode": "node ./scripts/check-production-data-mode.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
