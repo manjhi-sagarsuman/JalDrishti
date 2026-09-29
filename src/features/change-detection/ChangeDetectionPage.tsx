@@ -7,6 +7,7 @@ import { Button, Card, EmptyState, ErrorState, Input, LoadingState, PageHeader, 
 import { MapView, type MapFeatureCollection } from "../../maps"
 import type { MapLayerId } from "../../maps/mapLayers"
 import { useAuth } from "../../hooks/useAuth"
+import { calculateObservedChange } from "../../services/changeAnalysisService"
 import { analysisTypeForIndicator, loadAnalyticsWorkspace, type AnalyticsComparison, type AnalyticsIndicator, type AnalyticsWorkspace } from "../../services/analyticsService"
 
 type ChangeIndicator = "NDVI" | "NDWI / Water Index"
@@ -222,6 +223,17 @@ function ChangeDetectionPage() {
       <p className="mt-3 text-xs leading-5 text-muted">The comparison uses the most recent matching indicator observation on or before each selected date. Displayed observation dates remain visible in the results.</p>
     </Card>
 
+    {parameters && (!before || !after || !validPair) && (
+      <Card className="p-6">
+        <EmptyState
+          className="min-h-40"
+          description="Insufficient satellite observations available for this watershed and indicator timeframe. At least two chronological observations (baseline and comparison) are required to calculate change analysis."
+          icon={GitCompareArrows}
+          title="Insufficient observations available"
+        />
+      </Card>
+    )}
+
     <div className="grid items-start gap-4 xl:grid-cols-2">
       <MapPanel description={before ? `${before.code} observed ${formatDate(before.observedAt)}${selectedSceneBefore ? ` / ${selectedSceneBefore.sceneIdentifier}` : ""}` : "Select a watershed and dates to locate a baseline record."} features={beforeMap} layer="satellite-scenes" title="Before map" />
       <MapPanel description={after ? `${after.code} observed ${formatDate(after.observedAt)}${selectedSceneAfter ? ` / ${selectedSceneAfter.sceneIdentifier}` : ""}` : "Select a watershed and dates to locate a comparison record."} features={afterMap} layer="satellite-scenes" title="After map" />
@@ -239,7 +251,13 @@ function ChangeDetectionPage() {
     <Card><div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4"><p className="text-sm font-semibold text-amber-900">Limitations</p><ul className="mt-2 list-disc space-y-1 pl-5 text-xs leading-5 text-amber-900/90"><li>Map panels show scene coverage footprints, not raster pixel previews.</li><li>Increase, decrease, and stable area are shown only when explicitly recorded in the analysis results.</li><li>Temporal comparison and spatial association do not establish causal attribution to an intervention.</li><li>Cloud, sensor, resolution, and processing differences may affect comparability; see the source metadata.</li></ul></div>
     </Card>
 
-    <Card><SectionHeader description="Comparison summary and navigation actions." title="Actions" /><div className="mt-4 flex flex-wrap gap-2"><Button disabled={exportDisabled || !parameters} leadingIcon={ArrowDownToLine} onClick={() => parameters && exportGeoJSON(changeMap, parameters)} variant="secondary">Export Map (GeoJSON)</Button><Button disabled={!parameters || !validPair} leadingIcon={FilePlus2} onClick={addCurrentToReport}>Add to Report</Button>{parameters && <Link className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-semibold text-ink hover:bg-canvas" to={`/gis/field-evidence?watershed=${encodeURIComponent(parameters.watershedId)}`}><Camera aria-hidden="true" className="size-4" />View Evidence</Link>}</div>{reportMessage && <p aria-live="polite" className="mt-3 text-xs text-environment-700" role="status">{reportMessage}</p>}{parameters && validPair && before && after && <p className="mt-3 text-xs leading-5 text-muted">Observed change: {formatNumber(changeValue, before.unit)} ({changeValueLabel}). Increase/decrease/stable areas: {resultArea(resultMetadata, "increased")} / {resultArea(resultMetadata, "decreased")} / {resultArea(resultMetadata, "stable")}.</p>}</Card>
+    <Card><SectionHeader description="Comparison summary and navigation actions." title="Actions" /><div className="mt-4 flex flex-wrap gap-2"><Button disabled={exportDisabled || !parameters} leadingIcon={ArrowDownToLine} onClick={() => parameters && exportGeoJSON(changeMap, parameters)} variant="secondary">Export Map (GeoJSON)</Button><Button disabled={!parameters || !validPair} leadingIcon={FilePlus2} onClick={addCurrentToReport}>Add to Report</Button>{parameters && <Link className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-line bg-white px-4 text-sm font-semibold text-ink hover:bg-canvas" to={`/gis/field-evidence?watershed=${encodeURIComponent(parameters.watershedId)}`}><Camera aria-hidden="true" className="size-4" />View Evidence</Link>}</div>{reportMessage && <p aria-live="polite" className="mt-3 text-xs text-environment-700" role="status">{reportMessage}</p>}{parameters && validPair && before && after && (
+      <div className="mt-4 rounded-lg border border-line bg-canvas p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted">Documented Physical Interpretation</p>
+        <p className="mt-1 text-sm font-medium text-ink">{calculateObservedChange({ before_value: before.value, after_value: after.value, indicator: parameters.indicator, processing_method: typeof method === "string" ? method : undefined }).interpretation}</p>
+        <p className="mt-2 text-xs leading-5 text-muted">Observed change: {formatNumber(changeValue, before.unit)} ({changeValueLabel}). Increase/decrease/stable areas: {resultArea(resultMetadata, "increased")} / {resultArea(resultMetadata, "decreased")} / {resultArea(resultMetadata, "stable")}. Formula: after_value - before_value. Note: Numerical change is presented without assuming positive values denote watershed improvement.</p>
+      </div>
+    )}</Card>
 
     <p className="text-xs leading-5 text-muted">Results describe observed change, temporal comparison, and spatial association. They do not claim that an intervention caused the change.</p>
   </div>
