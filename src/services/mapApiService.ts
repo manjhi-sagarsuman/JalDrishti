@@ -12,7 +12,7 @@ function parseFeatureCollection(value: unknown): MapFeatureCollection {
 
 export async function loadMapLayer(layer: MapApiLayer): Promise<MapFeatureCollection> {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim()
-  const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim()
+  const publishableKey = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.VITE_SUPABASE_ANON_KEY)?.trim()
   if (!supabaseUrl || !publishableKey) throw new Error("The map API is not configured.")
   const response = await fetch(`${supabaseUrl.replace(/\/$/, "")}/functions/v1/map-api/${layer}`, { headers: { apikey: publishableKey } })
   if (!response.ok) throw new Error(`The ${layer} map layer could not be loaded.`)
