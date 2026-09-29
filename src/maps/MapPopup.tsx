@@ -1,30 +1,180 @@
 import { mapLayers } from "./mapLayers"
+import { ExternalLink, CheckCircle, Clock, AlertTriangle } from "lucide-react"
 
 export interface MapPopupProps {
   title: string
   layerId?: string
   properties?: Record<string, unknown>
+  onViewDetails?: (properties: Record<string, unknown>) => void
 }
 
-function displayValue(value: unknown) {
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return String(value)
+function displayValue(value: unknown): string | null {
+  if (value === null || value === undefined) return null
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    return String(value)
+  }
   return null
 }
 
-export function MapPopup({ title, layerId, properties = {} }: MapPopupProps) {
+export function MapPopup({ title, layerId, properties = {}, onViewDetails }: MapPopupProps) {
   const layer = mapLayers.find((item) => item.id === layerId)
-  const rows = Object.entries(properties)
-    .filter(([key]) => key !== "layerId" && key !== "title" && key !== "id")
-    .map(([key, value]) => [key, displayValue(value)] as const)
-    .filter((row): row is readonly [string, string] => row[1] !== null)
-    .slice(0, 6)
+
+  const isEvidence = layerId === "geo-tagged-photos" || Boolean(properties.thumbnail_url || properties.image_url)
+  const isWatershed = layerId === "watershed-boundary"
+  const isIntervention = layerId?.startsWith("intervention") || layerId === "interventions"
+
+  const thumbnailUrl = (properties.thumbnail_url || properties.image_url) as string | undefined
+  const status = (properties.verification_status || properties.status) as string | undefined
+  const category = (properties.category || properties.type) as string | undefined
+  const village = (properties.village || properties.village_name) as string | undefined
+  const block = (properties.block || properties.block_name) as string | undefined
+  const district = (properties.district || properties.district_name) as string | undefined
+  const date = (properties.date || properties.captured_at || properties.implementation_date) as string | undefined
 
   return (
-    <article className="min-w-48 max-w-64 p-1 text-ink">
-      {layer && <p className="text-[10px] font-bold uppercase tracking-wide text-brand-700">{layer.label}</p>}
-      <h2 className="mt-0.5 text-sm font-semibold">{title}</h2>
-      {rows.length > 0 && <dl className="mt-2 space-y-1 border-t border-line pt-2">{rows.map(([key, value]) => <div className="flex justify-between gap-4 text-xs" key={key}><dt className="capitalize text-muted">{key.replaceAll("_", " ")}</dt><dd className="text-right font-medium">{value}</dd></div>)}</dl>}
-      {!layer && <p className="mt-1 text-[11px] text-muted">Map feature</p>}
+    <article className="min-w-[15rem] max-w-[19rem] text-ink font-sans p-1">
+      {isEvidence && thumbnailUrl && (
+        <div className="relative mb-2 h-28 w-full overflow-hidden rounded-md bg-slate-900 flex items-center justify-center">
+          <img
+            src={thumbnailUrl}
+            alt={title}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+          {status && (
+            <span
+              className={`absolute top-1.5 right-1.5 flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase shadow-sm ${
+                status === "VERIFIED"
+                  ? "bg-emerald-600 text-white"
+                  : status === "REJECTED"
+                  ? "bg-red-600 text-white"
+                  : "bg-amber-500 text-white"
+              }`}
+            >
+              {status === "VERIFIED" ? (
+                <CheckCircle className="size-3" />
+              ) : status === "REJECTED" ? (
+                <AlertTriangle className="size-3" />
+              ) : (
+                <Clock className="size-3" />
+              )}
+              {status}
+            </span>
+          )}
+        </div>
+      )}
+
+      {layer && (
+        <p className="text-[10px] font-bold uppercase tracking-wider text-brand-800">
+          {layer.label}
+        </p>
+      )}
+
+      <h3 className="mt-0.5 text-sm font-semibold leading-snug">{title}</h3>
+
+      <dl className="mt-2 space-y-1 border-t border-line pt-2 text-xs">
+        {isEvidence && (
+          <>
+            {category && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Category:</dt>
+                <dd className="font-medium text-brand-800">{category}</dd>
+              </div>
+            )}
+            {(village || block) && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Village / Block:</dt>
+                <dd className="font-medium">{[village, block].filter(Boolean).join(", ")}</dd>
+              </div>
+            )}
+            {district && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">District:</dt>
+                <dd className="font-medium">{district}</dd>
+              </div>
+            )}
+            {date && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Captured Date:</dt>
+                <dd className="font-medium">{date.split("T")[0]}</dd>
+              </div>
+            )}
+          </>
+        )}
+
+        {isWatershed && (
+          <>
+            <div className="flex justify-between gap-2">
+              <dt className="text-muted">District:</dt>
+              <dd className="font-medium">{String(properties.district || "Pune")}</dd>
+            </div>
+            <div className="flex justify-between gap-2">
+              <dt className="text-muted">Block:</dt>
+              <dd className="font-medium">{String(properties.block || "Haveli")}</dd>
+            </div>
+            {properties.areaKm2 && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Area:</dt>
+                <dd className="font-medium">{String(properties.areaKm2)} km²</dd>
+              </div>
+            )}
+          </>
+        )}
+
+        {isIntervention && (
+          <>
+            <div className="flex justify-between gap-2">
+              <dt className="text-muted">Type:</dt>
+              <dd className="font-medium">{String(properties.type || "Intervention")}</dd>
+            </div>
+            {properties.code && (
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted">Code:</dt>
+                <dd className="font-mono text-[11px] font-medium">{String(properties.code)}</dd>
+              </div>
+            )}
+            <div className="flex justify-between gap-2">
+              <dt className="text-muted">Status:</dt>
+              <dd className="font-semibold text-brand-800">{String(properties.status || "PLANNED")}</dd>
+            </div>
+          </>
+        )}
+
+        {!isEvidence && !isWatershed && !isIntervention && (
+          Object.entries(properties)
+            .filter(([key]) => key !== "layerId" && key !== "title" && key !== "id")
+            .map(([key, value]) => [key, displayValue(value)] as const)
+            .filter((row): row is readonly [string, string] => row[1] !== null)
+            .slice(0, 4)
+            .map(([key, val]) => (
+              <div className="flex justify-between gap-4 text-xs" key={key}>
+                <dt className="capitalize text-muted">{key.replaceAll("_", " ")}</dt>
+                <dd className="text-right font-medium">{val}</dd>
+              </div>
+            ))
+        )}
+      </dl>
+
+      <div className="mt-3 border-t border-line pt-2 flex gap-1.5">
+        <button
+          type="button"
+          onClick={() => {
+            if (onViewDetails) {
+              onViewDetails(properties)
+            } else {
+              window.dispatchEvent(
+                new CustomEvent("jaldrishti:view-details", {
+                  detail: { properties, layerId, title }
+                })
+              )
+            }
+          }}
+          className="flex flex-1 items-center justify-center gap-1.5 rounded bg-brand-800 px-2 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-brand-900"
+        >
+          View Details
+          <ExternalLink className="size-3" />
+        </button>
+      </div>
     </article>
   )
 }
