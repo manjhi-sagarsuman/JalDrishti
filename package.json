@@ -8,7 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "import:starter-data": "node scripts/import-starter-dataset.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:watershed": "node scripts/check-watershed-integration.mjs",
+    "test:intervention": "node scripts/check-intervention-integration.mjs",
+    "test:satellite": "node ./scripts/check-satellite-integration.mjs",
+    "test:indicator": "node ./scripts/check-indicator-integration.mjs",
+    "test:change-analysis": "node ./scripts/check-change-analysis-integration.mjs",
+    "test:map-api": "node ./scripts/check-map-api-integration.mjs",
+    "test:production-mode": "node ./scripts/check-production-data-mode.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
