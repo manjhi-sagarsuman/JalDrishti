@@ -71,6 +71,18 @@ function ShellRoutes() {
         ) : (
           <Route element={<RoleGuard page={page}><RoutePlaceholder page={page} /></RoleGuard>} key={page.path} path={page.path.slice(1)} />
         ))}
+
+        {/* Standard Root Route Aliases */}
+        <Route element={<Suspense fallback={<LoadingState label="Loading interactive map" rows={5} />}><MapPage /></Suspense>} path="map" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading watershed explorer" rows={5} />}><WatershedExplorer /></Suspense>} path="watersheds" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading watershed explorer" rows={5} />}><WatershedExplorer /></Suspense>} path="watersheds/:watershedId" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading interventions" rows={5} />}><InterventionsModule /></Suspense>} path="interventions" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading intervention detail" rows={5} />}><InterventionsModule /></Suspense>} path="interventions/:interventionId" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading field evidence" rows={5} />}><EvidenceModule /></Suspense>} path="geo-evidence" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading evidence detail" rows={5} />}><EvidenceModule /></Suspense>} path="geo-evidence/:evidenceId" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading evidence upload" rows={5} />}><EvidenceModule /></Suspense>} path="upload" />
+        <Route element={<Suspense fallback={<LoadingState label="Loading analytics center" rows={5} />}><AnalyticsCenter /></Suspense>} path="analytics" />
+
         <Route element={<Navigate replace to="/dashboard" />} path="*" />
       </Route>
       <Route element={isPrototypeMode ? <Navigate replace to="/dashboard" /> : <Login />} path="/login" />

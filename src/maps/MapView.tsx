@@ -57,6 +57,19 @@ const defaultStreetStyle: StyleSpecification = {
   layers: [{ id: "open-street-map-raster", type: "raster", source: "open-street-map", minzoom: 0, maxzoom: 19 }],
 }
 
+const defaultSatelliteStyle: StyleSpecification = {
+  version: 8,
+  sources: {
+    "world-imagery": {
+      type: "raster",
+      tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+      tileSize: 256,
+      attribution: "Source: Esri, Maxar, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
+    },
+  },
+  layers: [{ id: "world-imagery-raster", type: "raster", source: "world-imagery", minzoom: 0, maxzoom: 19 }],
+}
+
 function layerColorExpression(): ExpressionSpecification {
   return ["match", ["get", "layerId"], ...mapLayers.flatMap((layer) => [layer.id, layer.color]), "#378b5c"] as unknown as ExpressionSpecification
 }
@@ -81,7 +94,7 @@ export function MapView({
   fitBounds,
   initialBaseMap: requestedBaseMap,
   streetStyle = import.meta.env.VITE_MAP_STYLE_URL?.trim() || defaultStreetStyle,
-  satelliteStyle = import.meta.env.VITE_SATELLITE_STYLE_URL?.trim() || undefined,
+  satelliteStyle = import.meta.env.VITE_SATELLITE_STYLE_URL?.trim() || defaultSatelliteStyle,
   visibleLayerIds: controlledVisibleLayers,
   onVisibleLayersChange,
   className = "",
